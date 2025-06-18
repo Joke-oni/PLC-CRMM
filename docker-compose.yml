@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  hmi:
+    image: scyphy/minicps:latest
+    container_name: hmi
+    networks:
+      ics_net:
+        ipv4_address: 192.168.1.10
+    volumes:
+      - ./simulation/hmi_scripts:/scripts
+    command: tail -f /dev/null  # Keep container running
+    environment:
+      - PROTOCOL=modbus
+      - TARGET=plc
+
+  plc:
+    image: scyphy/minicps:latest
+    container_name: plc
+    networks:
+      ics_net:
+        ipv4_address: 192.168.1.20
+    volumes:
+      - ./simulation/plc_programs:/programs
+    ports:
+      - "502:502"  # Modbus port
+    environment:
+      - SIL_LEVEL=3
+      - DEVICE_TYPE=S7-1500
+
+  valve:
+    image: scyphy/minicps:latest
+    container_name: valve
+    networks:
+      ics_net:
+        ipv4_address: 192.168.1.40
+    environment:
+      - SENSOR_TYPE=pressure
+      - CRITICAL_THRESHOLD=900
+
+networks:
+  ics_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
