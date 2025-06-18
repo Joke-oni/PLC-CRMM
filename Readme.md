@@ -1,3 +1,3 @@
 # PLC-CRMM
 
-![Screenshot](https://github.com/username/repo/assets/image-id)
+![Screenshot](https://github.com/Joke-oni/PLC-CRMM/blob/main/plc.png)
